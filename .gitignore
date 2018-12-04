@@ -1,0 +1,4 @@
+out/
+src/com/company/logs/*.txt
+src/com/company/HighScore.txt
+.idea/
