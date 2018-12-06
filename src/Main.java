@@ -26,7 +26,7 @@ public class Main{
             var injector = Guice.createInjector(new BasicModule());
             var myBot = injector.getInstance(Server.class);
             botsApi.registerBot(myBot);
-            
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
