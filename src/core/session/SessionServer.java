@@ -114,11 +114,8 @@ public class SessionServer implements ISessionServer {
     var first = session.getFirst();
     var second = session.getSecond();
 
-    if (first instanceof User)
-      userToCurrentSessionId.remove(first);
-
-    if (second instanceof User)
-      userToCurrentSessionId.remove(second);
+    userToCurrentSessionId.remove(first);
+    userToCurrentSessionId.remove(second);
 
     idToSession.remove(sessionId);
   }
