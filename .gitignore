@@ -46,3 +46,4 @@ fabric.properties
 */target/ 
 */log/
 .idea/
+.target
