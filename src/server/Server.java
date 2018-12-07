@@ -2,10 +2,9 @@ package server;
 
 import com.google.inject.Inject;
 import core.IGameServer;
-import core.primitives.User;
+import core.player.User;
 import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
-import exceptions.UserDataBaseException;
 import exceptions.UserQueueException;
 import org.glassfish.grizzly.utils.Pair;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -31,10 +30,10 @@ public class Server extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         var message = update.getMessage().getText();
         var name = update.getMessage().getChat().getUserName();
-        var ID = update.getMessage().getChatId().toString();
-        var currentUser = gameServer.userDataBase().getUserElseNull(name);
+        var chatID = update.getMessage().getChatId().toString();
+        var currentUser = gameServer.userDataBase().getUserElseNull(chatID);
         if (message.equalsIgnoreCase("/start") && currentUser == null ){
-            initUser(name, ID);
+            initUser(name, chatID);
             try{
                 var users = gameServer.playerQueue().dequeuePair();
                 gameServer.sessionServer().createSession(users.getFirst(), users.getSecond());
@@ -43,15 +42,15 @@ public class Server extends TelegramLongPollingBot {
                 sendStartedSessionMsg(users);
             }
             catch (UserQueueException | SessionServerException e){
-                sendMsg(ID, e.getMessage());
+                sendMsg(chatID, e.getMessage());
             }
         }
         else if (currentUser == null){
-            sendMsg(ID, "To start a new game write /start");
+            sendMsg(chatID, "To start a new game write /start");
         }
         else{
             var otherId = gameServer.sessionServer().
-                    getSessionWithUserElseNull(currentUser).
+                    getSessionWithPlayerElseNull(currentUser).
                     getOther(currentUser).
                     getChatID();
             sendMsg(otherId, message);
@@ -65,7 +64,7 @@ public class Server extends TelegramLongPollingBot {
 
     private void initUser(String name, String chatID) {
         gameServer.userDataBase().register(name, chatID, UserGameRole.WAITER);
-        gameServer.playerQueue().enqueue(gameServer.userDataBase().getUserElseNull(name));
+        gameServer.playerQueue().enqueue(gameServer.userDataBase().getUserElseNull(chatID));
     }
 
     private synchronized void sendMsg(String chatId, String s) {

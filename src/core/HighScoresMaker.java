@@ -1,6 +1,6 @@
 package core;
 
-import core.primitives.User;
+import core.player.User;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;

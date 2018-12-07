@@ -2,7 +2,7 @@ package core;
 
 
 import core.primitives.CowsAndBulls;
-import core.primitives.User;
+import core.player.User;
 import tools.Constants;
 import tools.Helper;
 

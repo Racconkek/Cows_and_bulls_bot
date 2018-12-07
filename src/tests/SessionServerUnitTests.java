@@ -1,6 +1,6 @@
 //package tests;
 //
-//import core.primitives.User;
+//import core.player.User;
 //import core.primitives.UserGameRole;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;

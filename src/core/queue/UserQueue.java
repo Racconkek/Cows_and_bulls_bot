@@ -1,22 +1,21 @@
 package core.queue;
 
 import com.google.inject.Inject;
-import core.primitives.User;
+import core.player.User;
 import exceptions.UserQueueException;
-import java.util.HashSet;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
+
 import org.glassfish.grizzly.utils.Pair;
 
 public class UserQueue implements IUserQueue {
 
   private final Queue<User> queue;
-  private final Set<User> users;
+
 
   @Inject
   public UserQueue() {
-    users = new HashSet<>();
     queue = new LinkedList<>();
   }
 
@@ -27,7 +26,7 @@ public class UserQueue implements IUserQueue {
       throw new IllegalArgumentException("attempt to enqueue null user");
     }
 
-    if (users.add(user))
+    if (!queue.contains(user))
     {
       queue.add(user);
       return true;
@@ -70,9 +69,6 @@ public class UserQueue implements IUserQueue {
 
     var first = queue.remove();
     var second = queue.remove();
-
-    users.remove(first);
-    users.remove(second);
 
     return new Pair<>(first, second);
   }

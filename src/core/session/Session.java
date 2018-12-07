@@ -1,13 +1,14 @@
 package core.session;
 
-import core.primitives.User;
+import core.player.IPlayer;
+import core.player.User;
 
 public class Session {
-  private User first;
-  private User second;
+  private IPlayer first;
+  private IPlayer second;
   private String id;
 
-  Session(User first, User second, String id){
+  Session(IPlayer first, IPlayer second, String id){
     this.first = first;
     this.second = second;
     this.id = id;
@@ -17,15 +18,15 @@ public class Session {
     return id;
   }
 
-  public User getFirst() {
+  public IPlayer getFirst() {
     return first;
   }
 
-  public User getSecond() {
+  public IPlayer getSecond() {
     return second;
   }
 
-  public User getOther(User user){
+  public IPlayer getOther(IPlayer user){
     if (user.equals(first))
       return second;
     return first;

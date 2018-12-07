@@ -1,6 +1,6 @@
 package core.queue;
 
-import core.primitives.User;
+import core.player.User;
 import exceptions.UserQueueException;
 import org.glassfish.grizzly.utils.Pair;
 
