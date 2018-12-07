@@ -3,7 +3,7 @@ package tools;
 import com.google.inject.Inject;
 import core.GameRules;
 import core.HighScoresMaker;
-import core.primitives.User;
+import core.player.User;
 import exceptions.WrongInputException;
 import java.util.HashSet;
 

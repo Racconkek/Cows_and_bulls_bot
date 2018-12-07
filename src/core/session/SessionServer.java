@@ -1,18 +1,16 @@
 package core.session;
 
 import com.google.inject.Inject;
-import core.primitives.User;
+import core.player.IPlayer;
+import core.player.User;
 import exceptions.SessionServerException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.*;
 
 public class SessionServer implements ISessionServer {
 
   private final Map<String, Session> idToSession;
-  private final Map<User, String> userToCurrentSessionId;
+  private final Map<IPlayer, String> userToCurrentSessionId;
 
   @Inject
   public SessionServer() {
@@ -21,12 +19,12 @@ public class SessionServer implements ISessionServer {
   }
 
   @Override
-  public Session createSession(User firstUser, User secondUser) throws SessionServerException {
-    if (hasSessionWithUser(firstUser)) {
+  public Session createSession(IPlayer firstUser, IPlayer secondUser) throws SessionServerException {
+    if (hasSessionWithPlayer(firstUser)) {
       throwAlreadyHaveSession(firstUser);
     }
 
-    if (hasSessionWithUser(secondUser)) {
+    if (hasSessionWithPlayer(secondUser)) {
       throwAlreadyHaveSession(secondUser);
     }
 
@@ -46,13 +44,13 @@ public class SessionServer implements ISessionServer {
 
 
   @Override
-  public Session createAISessionForPlayer(User user) throws SessionServerException {
+  public Session createAISessionForPlayer(IPlayer user) throws SessionServerException {
     return null;
   }
 
   @Override
-  public List<Session> getSessions() {
-    return new ArrayList<Session>(idToSession.values());
+  public HashSet<Session> getSessions() {
+    return new HashSet<>(idToSession.values());
   }
 
   @Override
@@ -72,8 +70,8 @@ public class SessionServer implements ISessionServer {
   }
 
   @Override
-  public Session getSessionWithUser(User user) throws SessionServerException {
-    var session = getSessionWithUserElseNull(user);
+  public Session getSessionWithPlayer(IPlayer user) throws SessionServerException {
+    var session = getSessionWithPlayerElseNull(user);
 
     if (session == null) {
       throw new SessionServerException(String.format("No session with user: %s", user.getName()));
@@ -83,7 +81,7 @@ public class SessionServer implements ISessionServer {
   }
 
   @Override
-  public Session getSessionWithUserElseNull(User user) {
+  public Session getSessionWithPlayerElseNull(IPlayer user) {
     var id = userToCurrentSessionId.get(user);
 
     if (id == null) {
@@ -94,7 +92,7 @@ public class SessionServer implements ISessionServer {
   }
 
   @Override
-  public boolean hasSessionWithUser(User user) {
+  public boolean hasSessionWithPlayer(IPlayer user) {
     return userToCurrentSessionId.containsKey(user);
   }
 
@@ -125,7 +123,7 @@ public class SessionServer implements ISessionServer {
     return userToCurrentSessionId.containsValue(sessionId);
   }
 
-  private void throwAlreadyHaveSession(User user) throws SessionServerException {
+  private void throwAlreadyHaveSession(IPlayer user) throws SessionServerException {
     throw new SessionServerException(String.format("User %s already have session", user.getName()));
   }
 

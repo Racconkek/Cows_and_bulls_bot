@@ -1,10 +1,12 @@
-package core.primitives;
+package core.player;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import core.primitives.UserGameRole;
 import tools.HiddenNumberGenerator;
 
-public class User {
+public class User implements IPlayer {
 
   private String name;
   private Integer tries;
@@ -30,6 +32,10 @@ public class User {
     return name;
   }
 
+  public Integer getTries() {
+    return tries;
+  }
+
   public List<Integer> getHiddenNumber() {
     return hiddenNumber;
   }
@@ -41,10 +47,6 @@ public class User {
 
   public void increaseTries() {
     tries++;
-  }
-
-  public Integer getTries() {
-    return tries;
   }
 
   @Override

@@ -1,5 +1,5 @@
 import com.google.inject.Inject;
-import core.primitives.User;
+import core.player.User;
 import core.primitives.UserGameRole;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;

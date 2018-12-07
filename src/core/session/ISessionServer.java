@@ -1,26 +1,28 @@
 package core.session;
 
-import core.primitives.User;
+import core.player.IPlayer;
+import core.player.User;
 import exceptions.SessionServerException;
-import java.util.List;
+
+import java.util.Set;
 
 public interface ISessionServer {
 
-  Session createSession(User firstUser, User secondUser) throws SessionServerException;
+  Session createSession(IPlayer firstUser, IPlayer secondUser) throws SessionServerException;
 
-  Session createAISessionForPlayer(User user) throws SessionServerException;
+  Session createAISessionForPlayer(IPlayer user) throws SessionServerException;
 
-  List<Session> getSessions();
+  Set<Session> getSessions();
 
   Session getSession(String sessionId) throws SessionServerException;
 
   Session getSessionElseNull(String sessionId);
 
-  Session getSessionWithUser(User user) throws SessionServerException;
+  Session getSessionWithPlayer(IPlayer user) throws SessionServerException;
 
-  Session getSessionWithUserElseNull(User user);
+  Session getSessionWithPlayerElseNull(IPlayer user);
 
-  boolean hasSessionWithUser(User user);
+  boolean hasSessionWithPlayer(IPlayer user);
 
   void endSession(Session session) throws SessionServerException;
 
