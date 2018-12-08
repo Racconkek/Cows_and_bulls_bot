@@ -2,10 +2,12 @@ package server;
 
 import com.google.inject.Inject;
 import core.IGameServer;
+import core.player.IPlayer;
 import core.player.User;
 import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
 import exceptions.UserQueueException;
+import jdk.dynalink.Operation;
 import org.glassfish.grizzly.utils.Pair;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,6 +16,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import tools.Constants;
 import tools.IHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server extends TelegramLongPollingBot {
     private IHandler handler;
@@ -32,7 +37,67 @@ public class Server extends TelegramLongPollingBot {
         var name = update.getMessage().getChat().getUserName();
         var chatID = update.getMessage().getChatId().toString();
         var currentUser = gameServer.userDataBase().getUserElseNull(chatID);
-        if (message.equalsIgnoreCase("/start") && currentUser == null ){
+        if (!handleCommand(message, currentUser, name, chatID) && currentUser == null) {
+            getHelp(chatID);
+        }
+        else if (currentUser != null && gameServer.sessionServer().hasSessionWithPlayer(currentUser)){
+            // надо разграничить обработку игры с ботом и игры с другим юзером
+            // а ещё на абракадабру он не отправляет ничего
+            var otherId = gameServer.sessionServer().
+                    getSessionWithPlayerElseNull(currentUser).
+                    getOther(currentUser).
+                    getChatID();
+            sendMsg(otherId, message);
+        }
+
+//        if (message.equalsIgnoreCase("/start") && currentUser == null ){
+//            initUser(name, chatID);
+//            try{
+//                var users = gameServer.playerQueue().dequeuePair();
+//                gameServer.sessionServer().createSession(users.getFirst(), users.getSecond());
+//                users.getFirst().setRole(UserGameRole.RIDDLER);
+//                users.getSecond().setRole(UserGameRole.GUESSER);
+//                sendStartedSessionMsg(users);
+//            }
+//            catch (UserQueueException | SessionServerException e){
+//                sendMsg(chatID, e.getMessage());
+//            }
+//        }
+//        else if (currentUser == null){
+//            sendMsg(chatID, "To start a new game write /start");
+//        }
+//        else{
+//            var otherId = gameServer.sessionServer().
+//                    getSessionWithPlayerElseNull(currentUser).
+//                    getOther(currentUser).
+//                    getChatID();
+//            sendMsg(otherId, message);
+//        }
+    }
+
+    private boolean handleCommand(String command, IPlayer user, String name, String chatID){
+        if(command.equalsIgnoreCase("/start with user")){
+            startWithUser(user, name, chatID);
+            return true;
+        }
+        else if (command.equalsIgnoreCase("/start with bot")){
+            startWithBot(user, name, chatID);
+            return true;
+        }
+        else if (command.equalsIgnoreCase("/help") || command.equalsIgnoreCase("/h")){
+            getHelp(chatID);
+            return true;
+        }
+        return false;
+    }
+
+    private void getHelp(String chatID){
+        var help = "help text";
+        sendMsg(chatID, help);
+    }
+
+    private void startWithUser(IPlayer user, String name, String chatID){
+        if (user == null){
             initUser(name, chatID);
             try{
                 var users = gameServer.playerQueue().dequeuePair();
@@ -45,17 +110,32 @@ public class Server extends TelegramLongPollingBot {
                 sendMsg(chatID, e.getMessage());
             }
         }
-        else if (currentUser == null){
-            sendMsg(chatID, "To start a new game write /start");
+        else if (gameServer.sessionServer().hasSessionWithPlayer(user)){
+            sendMsg(user.getChatID(), "You already have session");
         }
         else{
-            var otherId = gameServer.sessionServer().
-                    getSessionWithPlayerElseNull(currentUser).
-                    getOther(currentUser).
-                    getChatID();
-            sendMsg(otherId, message);
+            sendMsg(user.getChatID(), "You are waiting for other user");
         }
     }
+
+    private void startWithBot(IPlayer user, String name, String chatID){
+        if (user == null){
+            gameServer.userDataBase().register(name, chatID, UserGameRole.GUESSER);
+            try{
+            gameServer.sessionServer().createAISessionForPlayer(gameServer.userDataBase().getUserElseNull(chatID));
+            }
+            catch (SessionServerException e){
+                sendMsg(chatID, e.getMessage());
+            }
+        }
+        else if(gameServer.sessionServer().hasSessionWithPlayer(user)){
+            sendMsg(user.getChatID(), "You already have session");
+        }
+        else{
+            sendMsg(user.getChatID(), "You are waiting for other user");
+        }
+    }
+
 
     private void sendStartedSessionMsg(Pair<User, User> users){
         sendMsg(users.getFirst().getChatID(), "You are riddling");

@@ -20,7 +20,7 @@ public class RiddlerBot implements IPlayer {
     }
 
     public String getAnswer(){
-        return "";
+        return "bot answer";
     }
 
     @Override
