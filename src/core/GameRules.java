@@ -1,14 +1,14 @@
 package core;
 
 
+import core.player.IPlayer;
 import core.primitives.CowsAndBulls;
-import core.player.User;
 import tools.Constants;
 import tools.Helper;
 
 public class GameRules {
 
-    public CowsAndBulls computeCowsAndBulls(int guessNumber, User user) {
+    public CowsAndBulls computeCowsAndBulls(int guessNumber, IPlayer user) {
         var cowsAndBulls = new CowsAndBulls();
 
         var partsOfNumber = Helper.fromIntegerToList(guessNumber);

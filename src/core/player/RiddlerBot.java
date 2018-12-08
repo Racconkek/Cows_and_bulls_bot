@@ -1,9 +1,13 @@
 package core.player;
 
+import com.google.inject.Inject;
+import core.handler.BotAnswerHandler;
+import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import tools.HiddenNumberGenerator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RiddlerBot implements IPlayer {
 
@@ -12,15 +16,18 @@ public class RiddlerBot implements IPlayer {
     private List<Integer> hiddenNumber;
     private String chatID;
     private UserGameRole role = UserGameRole.RIDDLER;
+    private BotAnswerHandler handler;
 
-    public RiddlerBot(String chatID){
+    @Inject
+    public RiddlerBot(String chatID, BotAnswerHandler handler){
         this.tries = 0;
         this.chatID = chatID;
         this.hiddenNumber = HiddenNumberGenerator.createHiddenNumber();
+        this.handler = handler;
     }
 
-    public String getAnswer(){
-        return "bot answer";
+    public HandlerAnswer getAnswer(String message, IPlayer user){
+        return handler.handleInput(message, user);
     }
 
     @Override
@@ -44,6 +51,12 @@ public class RiddlerBot implements IPlayer {
     }
 
     @Override
+    public String getStringCowsAndBullsNumber() {
+        return String
+                .join("", hiddenNumber.stream().map(Object::toString).collect(Collectors.toList()));
+    }
+
+    @Override
     public void setRole(UserGameRole role) {
         this.role = role;
     }
@@ -51,5 +64,10 @@ public class RiddlerBot implements IPlayer {
     @Override
     public List<Integer> getHiddenNumber() {
         return this.hiddenNumber;
+    }
+
+    @Override
+    public void increaseTries() {
+        tries++;
     }
 }

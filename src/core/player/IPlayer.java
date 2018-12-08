@@ -9,6 +9,9 @@ public interface IPlayer {
     String getChatID();
     Integer getTries();
     UserGameRole getRole();
+    String getStringCowsAndBullsNumber();
     void setRole(UserGameRole role);
     List<Integer> getHiddenNumber();
+    void increaseTries();
+
 }

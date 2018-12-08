@@ -1,11 +1,18 @@
 package core.session;
 
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import core.BasicModule;
+import core.handler.BotAnswerHandler;
 import core.player.IPlayer;
-import core.player.User;
+import core.player.RiddlerBot;
+import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 
 public class SessionServer implements ISessionServer {
 
@@ -45,7 +52,19 @@ public class SessionServer implements ISessionServer {
 
   @Override
   public Session createAISessionForPlayer(IPlayer user) throws SessionServerException {
-    return null;
+    if (hasSessionWithPlayer(user)) {
+      throwAlreadyHaveSession(user);
+    }
+
+    user.setRole(UserGameRole.GUESSER);
+    var id = createIdForSession();
+    var injector = Guice.createInjector(new BasicModule());
+    var bot = new RiddlerBot(user.getChatID(), injector.getInstance(BotAnswerHandler.class));
+    var session = new Session(user, bot, id);
+
+    idToSession.put(id, session);
+    userToCurrentSessionId.put(user, session.getId());
+    return session;
   }
 
   @Override
