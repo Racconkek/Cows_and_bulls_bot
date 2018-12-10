@@ -1,4 +1,4 @@
-package core.handler;
+package tools.handler;
 
 import com.google.inject.Inject;
 import core.GameRules;

@@ -1,7 +1,7 @@
 package core.player;
 
 import com.google.inject.Inject;
-import core.handler.BotAnswerHandler;
+import tools.handler.BotAnswerHandler;
 import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import tools.HiddenNumberGenerator;

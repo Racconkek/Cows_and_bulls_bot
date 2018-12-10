@@ -3,7 +3,7 @@ package core.session;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import core.BasicModule;
-import core.handler.BotAnswerHandler;
+import tools.handler.BotAnswerHandler;
 import core.player.IPlayer;
 import core.player.RiddlerBot;
 import core.primitives.UserGameRole;

@@ -2,9 +2,7 @@ package core;
 
 import com.google.inject.AbstractModule;
 //import org.glassfish.hk2.utilities.reflection.tools.Constants;
-import core.GameServer;
-import core.IGameServer;
-import core.handler.BotAnswerHandler;
+import tools.handler.BotAnswerHandler;
 import core.queue.IUserQueue;
 import core.queue.UserQueue;
 import core.session.ISessionServer;
@@ -14,7 +12,7 @@ import core.userdb.UserDataBase;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 import tools.Constants;
-import core.handler.IHandler;
+import tools.handler.IHandler;
 
 
 public class BasicModule extends AbstractModule {
