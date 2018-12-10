@@ -22,11 +22,17 @@ public class User implements IPlayer {
     hiddenNumber = HiddenNumberGenerator.createHiddenNumber();
   }
 
-  public UserGameRole getRole() { return role; }
+  public UserGameRole getRole() {
+    return role;
+  }
 
-  public void setRole(UserGameRole role) { this.role = role; }
+  public void setRole(UserGameRole role) {
+    this.role = role;
+  }
 
-  public String getChatID() {return  chatID;}
+  public String getChatID() {
+    return chatID;
+  }
 
   public String getName() {
     return name;
@@ -40,6 +46,8 @@ public class User implements IPlayer {
     return hiddenNumber;
   }
 
+  public void setHiddenNumber(List<Integer> number) { this.hiddenNumber = number; }
+
   public String getStringCowsAndBullsNumber() {
     return String
         .join("", hiddenNumber.stream().map(Object::toString).collect(Collectors.toList()));
@@ -51,8 +59,8 @@ public class User implements IPlayer {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof User){
-      var other = (User)obj;
+    if (obj instanceof User) {
+      var other = (User) obj;
       return this.chatID.equals(other.chatID);
     }
     return false;

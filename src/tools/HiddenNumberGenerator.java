@@ -6,8 +6,8 @@ import java.util.Random;
 public class HiddenNumberGenerator {
 
     public static ArrayList<Integer> createHiddenNumber() {
-        ArrayList<Integer> res = new ArrayList<>();
-        Random random = new Random();
+        var res = new ArrayList<Integer>();
+        var random = new Random();
         res.add(random.nextInt(9) + 1);
         while (res.size() < Constants.NUMBER_OF_DIGITS) {
             int newNumber = (random.nextInt(10));
