@@ -28,7 +28,7 @@ public class UserDataBase implements IUserDataBase {
   @Override
   public boolean delete(String chatID) throws UserDataBaseException {
     if (!hasUser(chatID))
-      throw new UserDataBaseException(String.format("No that user with name: %s", getUser(chatID).getName()));
+      throw new UserDataBaseException(String.format("No that user with chatID: %s", chatID));
     var id = getUser(chatID).getChatID();
     idToUser.remove(id);
     return true;
