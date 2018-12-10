@@ -8,7 +8,7 @@ public class Session {
   private IPlayer second;
   private String id;
 
-  Session(IPlayer first, IPlayer second, String id){
+  public Session(IPlayer first, IPlayer second, String id){
     this.first = first;
     this.second = second;
     this.id = id;
