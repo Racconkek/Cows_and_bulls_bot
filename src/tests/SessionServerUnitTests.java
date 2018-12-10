@@ -3,7 +3,9 @@ package tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.handler.BotAnswerHandler;
 import core.player.IPlayer;
+import core.player.RiddlerBot;
 import core.player.User;
 import core.primitives.UserGameRole;
 import core.session.Session;
@@ -29,12 +31,12 @@ public class SessionServerUnitTests {
     var actual = server.createSession(first, second);
     var expected = new Session(first, second, server.getSessionWithPlayer(first).getId());
 
-    assertEquals(actual, expected);
+    assertEquals(expected, actual);
     assertEquals(1, server.getSessions().size());
   }
 
   @Test
-  void createSession_creatingWithNotFreeUser_shouldReturnRightValue()
+  void createSession_creatingWithNotFreeUser_shouldThrowExeption()
       throws SessionServerException {
     server.createSession(first, second);
     var third = new User("thirdU", "thirdID", UserGameRole.RIDDLER);
@@ -50,7 +52,43 @@ public class SessionServerUnitTests {
     var expected = new Session(first, second, server.getSessionWithPlayer(first).getId());
     var actual = server.getSession(id);
 
-    assertEquals(actual, expected);
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  void getSession_gettingByUnexistingUser_shouldThrowExeption() throws SessionServerException {
+
+    assertThrows(SessionServerException.class, () -> server.getSession(first.getChatID()));
+  }
+
+  @Test
+  void getSessionWithPlayer_shouldReturnRightValue() throws SessionServerException {
+    server.createSession(first, second);
+    var expected = new Session(first, second, server.getSessionWithPlayer(first).getId());
+    var actual = server.getSessionWithPlayer(first);
+    var session_userS = server.getSessionWithPlayer(second);
+
+    assertEquals(expected, actual);
+    assertEquals(session_userS, actual);
+  }
+
+  @Test
+  void hasSessionWithPlayer_shouldReturnRightValue() throws SessionServerException {
+    server.createSession(first, second);
+    var expected = true;
+    var actual = server.hasSessionWithPlayer(first);
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  void hasSessionWithPlayer_UnknownUser_shouldReturnRightValue() throws SessionServerException {
+    server.createSession(first, second);
+    var expected = false;
+    var third = new User("thirdU", "thirdId", UserGameRole.RIDDLER);
+    var actual = server.hasSessionWithPlayer(third);
+
+    assertEquals(expected, actual);
   }
 
 
