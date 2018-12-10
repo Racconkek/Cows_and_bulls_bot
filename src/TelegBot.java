@@ -13,7 +13,7 @@
 //import java.util.Map;
 //import java.util.Scanner;
 //import tools.Constants;
-//import core.handler.IHandler;
+//import tools.handler.IHandler;
 //
 //public class TelegBot extends TelegramLongPollingBot {
 //    private Map<String, User> users = new HashMap<>();

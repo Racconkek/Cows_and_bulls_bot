@@ -9,7 +9,6 @@ import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
 import exceptions.UserDataBaseException;
-import exceptions.UserQueueException;
 import org.glassfish.grizzly.utils.Pair;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -17,15 +16,18 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import tools.Constants;
-import core.handler.IHandler;
+import tools.selector.ICommandSelector;
 
 public class Server extends TelegramLongPollingBot {
     private IGameServer gameServer;
+    private ICommandSelector commandSelector;
+
 
     @Inject
-    public Server(DefaultBotOptions botOptions, IGameServer gameServer){
+    public Server(DefaultBotOptions botOptions, IGameServer gameServer, ICommandSelector commandSelector){
         super(botOptions);
         this.gameServer = gameServer;
+        this.commandSelector = commandSelector;
     }
 
     @Override
@@ -34,11 +36,18 @@ public class Server extends TelegramLongPollingBot {
         var name = update.getMessage().getChat().getUserName();
         var chatID = update.getMessage().getChatId().toString();
         var currentUser = gameServer.userDataBase().getUserElseNull(chatID);
-        if (handleCommand(message, currentUser, name, chatID)){
-            return;
-        }
         if(currentUser == null){
-            getHelp(chatID);
+            initUser(name, chatID);
+        }
+        var command = commandSelector.getCommand(message);
+        if (command != null){
+            var commandResult = command.execute(currentUser);
+            if (commandResult.getFirstMessage() != null)
+                sendMsg(chatID, commandResult.getFirstMessage());
+            if (commandResult.getSecondMessage() != null)
+                sendMsg(gameServer.sessionServer().getSessionWithPlayerElseNull(currentUser)
+                                .getOther(currentUser).getChatID(),
+                        commandResult.getSecondMessage());
         }
         else if(!gameServer.sessionServer().hasSessionWithPlayer(currentUser) &&
                 currentUser.getRole() == UserGameRole.WAITER){
@@ -66,85 +75,13 @@ public class Server extends TelegramLongPollingBot {
             }
         }
     }
+
     private HandlerAnswer handleMessage(String message, IPlayer user){
         var otherPlayer = gameServer.sessionServer().getSessionWithPlayerElseNull(user).getOther(user);
         if (otherPlayer instanceof RiddlerBot){
             return ((RiddlerBot) otherPlayer).getAnswer(message, user);
         }
         return new HandlerAnswer(message, false);
-    }
-
-    private boolean handleCommand(String command, IPlayer user, String name, String chatID){
-        switch (command){
-            case "/startu":
-                startWithUser(user, name, chatID);
-                return true;
-            case "/startb":
-                startWithBot(user, name, chatID);
-                return true;
-            case "/help":
-                getHelp(chatID);
-                return true;
-            case "/getnum":
-                getHiddenNumber(user, name, chatID);
-                return true;
-        }
-        return false;
-    }
-
-    private void getHiddenNumber(IPlayer user, String name, String chatID) {
-        if (user != null && gameServer.userDataBase().hasUser(chatID) &&
-                gameServer.sessionServer().hasSessionWithPlayer(user) &&
-                gameServer.sessionServer().getSessionWithPlayerElseNull(user).getOther(user) instanceof RiddlerBot)
-        {
-            sendMsg(chatID, user.getStringCowsAndBullsNumber());
-        }
-    }
-
-    private void getHelp(String chatID){
-        var help = "help text";
-        sendMsg(chatID, help);
-    }
-
-    private void startWithUser(IPlayer user, String name, String chatID){
-        if (user == null){
-            initUser(name, chatID);
-            try{
-                var users = gameServer.playerQueue().dequeuePair();
-                gameServer.sessionServer().createSession(users.getFirst(), users.getSecond());
-                users.getFirst().setRole(UserGameRole.RIDDLER);
-                users.getSecond().setRole(UserGameRole.GUESSER);
-                sendStartedSessionMsg(users);
-            }
-            catch (UserQueueException | SessionServerException e){
-                sendMsg(chatID, e.getMessage());
-            }
-        }
-        else if (gameServer.sessionServer().hasSessionWithPlayer(user)){
-            sendMsg(user.getChatID(), "You already have session");
-        }
-        else{
-            sendMsg(user.getChatID(), "You are waiting for other user");
-        }
-    }
-
-    private void startWithBot(IPlayer user, String name, String chatID){
-        if (user == null){
-            gameServer.userDataBase().register(name, chatID, UserGameRole.GUESSER);
-            try{
-                gameServer.sessionServer().createAISessionForPlayer(gameServer.userDataBase().getUserElseNull(chatID));
-                sendMsg(chatID, "You started session with bot. Please make your guess");
-            }
-            catch (SessionServerException e){
-                sendMsg(chatID, e.getMessage());
-            }
-        }
-        else if(gameServer.sessionServer().hasSessionWithPlayer(user)){
-            sendMsg(user.getChatID(), "You already have session");
-        }
-        else{
-            sendMsg(user.getChatID(), "You are waiting for other user");
-        }
     }
 
     private void sendStartedSessionMsg(Pair<User, User> users){
