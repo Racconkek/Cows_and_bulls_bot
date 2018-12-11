@@ -22,7 +22,7 @@ public class EndSessionCommand implements ICommand {
     public CommandResult execute(IPlayer user) {
         var session = gameServer.sessionServer().getSessionWithPlayerElseNull(user);
         if (session == null){
-            return new CommandResult("You don't have session", null, false);
+            return new CommandResult("You don't have session", null);
         }
         try {
             var otherUser = session.getOther(user);
@@ -31,10 +31,10 @@ public class EndSessionCommand implements ICommand {
             }
             gameServer.userDataBase().delete(user.getChatID());
             gameServer.sessionServer().endSession(session);
-            return new CommandResult("Your session has ended", null, true);
+            return new CommandResult("Your session has ended", null);
         }
         catch (SessionServerException | UserDataBaseException e){
-            return new CommandResult(e.getMessage(), null, false);
+            return new CommandResult(e.getMessage(), null);
         }
     }
 

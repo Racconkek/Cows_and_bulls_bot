@@ -18,19 +18,18 @@ public class StartWithRiddlerBotCommand implements ICommand {
     @Override
     public CommandResult execute(IPlayer user) {
         if(gameServer.sessionServer().hasSessionWithPlayer(user)){
-            return new CommandResult("You already have session", null, true);
+            return new CommandResult("You already have session", null);
         }
         // Проверка на то что пользователь ожидает в очереди
         if(gameServer.playerQueue().hasUser(user)){
-            return new CommandResult("You waiting for other user", null, true);
+            return new CommandResult("You waiting for other user", null);
         }
         try{
             gameServer.sessionServer().createSessionWithRiddlerBot(user);
-            return new CommandResult("You started session with bot. Please make your guess",
-                    null, false);
+            return new CommandResult("You started session with bot. Please make your guess", null);
         }
         catch (SessionServerException e){
-            return new CommandResult(e.getMessage(), null, false);
+            return new CommandResult(e.getMessage(), null);
         }
     }
 

@@ -20,9 +20,9 @@ public class GetNumberCommand implements ICommand {
         if (gameServer.sessionServer().hasSessionWithPlayer(user) &&
                 gameServer.sessionServer().getSessionWithPlayerElseNull(user).getOther(user) instanceof RiddlerBot)
         {
-            return new CommandResult(user.getStringCowsAndBullsNumber(), null, true);
+            return new CommandResult(user.getStringCowsAndBullsNumber(), null);
         }
-        return new CommandResult("You can't use this command", null, false);
+        return new CommandResult("You can't use this command", null);
     }
 
     @Override

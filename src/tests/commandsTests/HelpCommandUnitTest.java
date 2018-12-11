@@ -15,7 +15,7 @@ public class HelpCommandUnitTest {
     void execute_shouldReturnRightValue(){
         var user = new User("TestUser", "111", UserGameRole.WAITER);
         var command = new HelpCommand();
-        var expected = new CommandResult(Constants.HELP_TEXT, null, true);
+        var expected = new CommandResult(Constants.HELP_TEXT, null);
 
         var actual = command.execute(user);
         assertEquals(expected, actual);

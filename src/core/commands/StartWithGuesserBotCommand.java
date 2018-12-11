@@ -18,20 +18,19 @@ public class StartWithGuesserBotCommand implements ICommand {
     @Override
     public CommandResult execute(IPlayer user) {
         if(gameServer.sessionServer().hasSessionWithPlayer(user)){
-            return new CommandResult("You already have session", null, true);
+            return new CommandResult("You already have session", null);
         }
         // Проверка на то что пользователь ожидает в очереди
         if(gameServer.playerQueue().hasUser(user)){
-            return new CommandResult("You waiting for other user", null, true);
+            return new CommandResult("You waiting for other user", null);
         }
         try{
             gameServer.sessionServer().createSessionWithGuesserBot(user);
             //var firstGuess = gameServer.sessionServer().getSessionWithPlayer(user).getOther(user).getAnswer();
-            return new CommandResult("You started session with guesser bot.\n First guess: 1234",
-                    null, false);
+            return new CommandResult("You started session with guesser bot.\n First guess: 1234", null);
         }
         catch (SessionServerException e){
-            return new CommandResult(e.getMessage(), null, false);
+            return new CommandResult(e.getMessage(), null);
         }
     }
 

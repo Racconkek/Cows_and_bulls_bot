@@ -8,7 +8,7 @@ public class HelpCommand implements ICommand {
 
     @Override
     public CommandResult execute(IPlayer user) {
-        return new CommandResult(Constants.HELP_TEXT, null, true);
+        return new CommandResult(Constants.HELP_TEXT, null);
     }
 
     @Override

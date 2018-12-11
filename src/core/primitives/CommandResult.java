@@ -3,14 +3,11 @@ package core.primitives;
 public class CommandResult {
     private final String firstMessage;
     private final String secondMessage;
-    private final boolean isCorrect;
 
     public CommandResult(String firstMessage,
-                  String secondMessage,
-                  boolean isCorrect) {
+                  String secondMessage) {
         this.firstMessage = firstMessage;
         this.secondMessage = secondMessage;
-        this.isCorrect = isCorrect;
     }
 
     public String getFirstMessage() {
@@ -19,10 +16,6 @@ public class CommandResult {
 
     public String getSecondMessage() {
         return secondMessage;
-    }
-
-    public boolean isCorrect() {
-        return isCorrect;
     }
 
     @Override
