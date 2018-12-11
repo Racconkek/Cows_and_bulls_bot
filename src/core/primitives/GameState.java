@@ -1,10 +1,38 @@
 package core.primitives;
 
 public class GameState {
+
   private CowsAndBulls cowsAndBulls;
   private Integer possibleNumber;
+  private GameStatus status;
 
-  public CowsAndBulls cowsAndBulls(){return cowsAndBulls;}
+  public GameState(CowsAndBulls cowsAndBulls, Integer possibleNumber, GameStatus status) {
+    this.cowsAndBulls = cowsAndBulls;
+    this.possibleNumber = possibleNumber;
+    this.status = status;
+  }
 
-  public Integer possibleNumber(){return possibleNumber;}
+  public CowsAndBulls cowsAndBulls() {
+    return cowsAndBulls;
+  }
+
+  public GameState setCowsAndBulls(CowsAndBulls cowsAndBulls) {
+    return new GameState(cowsAndBulls, this.possibleNumber, this.status);
+  }
+
+  public Integer possibleNumber() {
+    return possibleNumber;
+  }
+
+  public GameState setPossibleNumber(Integer possibleNumber) {
+    return new GameState(this.cowsAndBulls, possibleNumber, this.status);
+  }
+
+  public GameStatus getStatus() {
+    return status;
+  }
+
+  public GameState setStatus(GameStatus status) {
+    return new GameState(this.cowsAndBulls, this.possibleNumber, status);
+  }
 }
