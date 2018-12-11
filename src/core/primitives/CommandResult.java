@@ -24,4 +24,16 @@ public class CommandResult {
     public boolean isCorrect() {
         return isCorrect;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CommandResult){
+            var other = (CommandResult)obj;
+            if(this.firstMessage != null)
+                return this.firstMessage.equals(other.firstMessage);
+            if(this.secondMessage != null)
+                return this.secondMessage.equals(other.secondMessage);
+        }
+        return false;
+    }
 }
