@@ -1,17 +1,17 @@
 package core.commands;
 
 import com.google.inject.Inject;
-import core.GameServer;
+import core.IGameServer;
 import core.player.IPlayer;
 import core.player.RiddlerBot;
 import core.primitives.CommandResult;
 
 public class GetNumberCommand implements ICommand {
 
-    private final GameServer gameServer;
+    private final IGameServer gameServer;
 
     @Inject
-    public GetNumberCommand(GameServer gameServer) {
+    public GetNumberCommand(IGameServer gameServer) {
         this.gameServer = gameServer;
     }
 

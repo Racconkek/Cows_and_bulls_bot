@@ -37,7 +37,8 @@ public class Server extends TelegramLongPollingBot {
         var chatID = update.getMessage().getChatId().toString();
         var currentUser = gameServer.userDataBase().getUserElseNull(chatID);
         if(currentUser == null){
-            initUser(name, chatID);
+            gameServer.userDataBase().register(name, chatID, UserGameRole.WAITER);
+            currentUser = gameServer.userDataBase().getUserElseNull(chatID);
         }
         var command = commandSelector.getCommand(message);
         if (command != null){
@@ -49,31 +50,31 @@ public class Server extends TelegramLongPollingBot {
                                 .getOther(currentUser).getChatID(),
                         commandResult.getSecondMessage());
         }
-        else if(!gameServer.sessionServer().hasSessionWithPlayer(currentUser) &&
-                currentUser.getRole() == UserGameRole.WAITER){
-            sendMsg(chatID, "You are waiting another user");
-        }
-        else{
-            var answer = handleMessage(message, currentUser);
-            if (answer.isEndSession()){
-                try{
-                    var session = gameServer.sessionServer().getSessionWithPlayerElseNull(currentUser);
-                    gameServer.sessionServer().endSession(session.getId());
-                    gameServer.userDataBase().delete(chatID);
-                    sendMsg(chatID, answer.getAnswer());
-                }
-                catch (SessionServerException | UserDataBaseException e){
-                    sendMsg(chatID, e.getMessage());
-                }
-            }
-            else{
-                var otherId = gameServer.sessionServer().
-                    getSessionWithPlayerElseNull(currentUser).
-                    getOther(currentUser).
-                    getChatID();
-                sendMsg(otherId, answer.getAnswer());
-            }
-        }
+//        else if(!gameServer.sessionServer().hasSessionWithPlayer(currentUser) &&
+//                currentUser.getRole() == UserGameRole.WAITER){
+//            sendMsg(chatID, "You are waiting another user");
+//        }
+//        else{
+//            var answer = handleMessage(message, currentUser);
+//            if (answer.isEndSession()){
+//                try{
+//                    var session = gameServer.sessionServer().getSessionWithPlayerElseNull(currentUser);
+//                    gameServer.sessionServer().endSession(session.getId());
+//                    gameServer.userDataBase().delete(chatID);
+//                    sendMsg(chatID, answer.getAnswer());
+//                }
+//                catch (SessionServerException | UserDataBaseException e){
+//                    sendMsg(chatID, e.getMessage());
+//                }
+//            }
+//            else{
+//                var otherId = gameServer.sessionServer().
+//                    getSessionWithPlayerElseNull(currentUser).
+//                    getOther(currentUser).
+//                    getChatID();
+//                sendMsg(otherId, answer.getAnswer());
+//            }
+//        }
     }
 
     private HandlerAnswer handleMessage(String message, IPlayer user){
@@ -82,16 +83,6 @@ public class Server extends TelegramLongPollingBot {
             return ((RiddlerBot) otherPlayer).getAnswer(message, user);
         }
         return new HandlerAnswer(message, false);
-    }
-
-    private void sendStartedSessionMsg(Pair<User, User> users){
-        sendMsg(users.getFirst().getChatID(), "You are riddling");
-        sendMsg(users.getSecond().getChatID(), "You have to guess the number");
-    }
-
-    private void initUser(String name, String chatID) {
-        gameServer.userDataBase().register(name, chatID, UserGameRole.WAITER);
-        gameServer.playerQueue().enqueue(gameServer.userDataBase().getUserElseNull(chatID));
     }
 
     private synchronized void sendMsg(String chatId, String s) {

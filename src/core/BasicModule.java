@@ -2,6 +2,8 @@ package core;
 
 import com.google.inject.AbstractModule;
 //import org.glassfish.hk2.utilities.reflection.tools.Constants;
+import com.google.inject.multibindings.Multibinder;
+import core.commands.*;
 import tools.handler.BotAnswerHandler;
 import core.queue.IUserQueue;
 import core.queue.UserQueue;
@@ -13,6 +15,8 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 import tools.Constants;
 import tools.handler.IHandler;
+import tools.selector.CommandSelector;
+import tools.selector.ICommandSelector;
 
 
 public class BasicModule extends AbstractModule {
@@ -20,12 +24,21 @@ public class BasicModule extends AbstractModule {
     @Override
     public void configure(){
         bind(IHandler.class).to(BotAnswerHandler.class);
-        bind(IGameServer.class).to(GameServer.class);
-        bind(IUserQueue.class).to(UserQueue.class);
-        bind(ISessionServer.class).to(SessionServer.class);
-        bind(IUserDataBase.class).to(UserDataBase.class);
+        bind(IGameServer.class).to(GameServer.class).asEagerSingleton();
+        bind(IUserQueue.class).to(UserQueue.class).asEagerSingleton();
+        bind(ISessionServer.class).to(SessionServer.class).asEagerSingleton();
+        bind(IUserDataBase.class).to(UserDataBase.class).asEagerSingleton();
         bind(DefaultBotOptions.class).toInstance(defBotOpt());
+        bind(ICommandSelector.class).to(CommandSelector.class).asEagerSingleton();
+
+        var binder = Multibinder.newSetBinder(binder(), ICommand.class);
+        binder.addBinding().to(GetNumberCommand.class);
+        binder.addBinding().to(HelpCommand.class);
+        binder.addBinding().to(StartWithBotCommand.class);
+        binder.addBinding().to(StartWithUserCommand.class);
     }
+
+
 
     public DefaultBotOptions defBotOpt(){
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);

@@ -1,7 +1,7 @@
 package core.commands;
 
 import com.google.inject.Inject;
-import core.GameServer;
+import core.IGameServer;
 import core.player.IPlayer;
 import core.primitives.CommandResult;
 import core.primitives.UserGameRole;
@@ -10,10 +10,10 @@ import exceptions.UserQueueException;
 
 public class StartWithUserCommand implements ICommand {
 
-    private final GameServer gameServer;
+    private final IGameServer gameServer;
 
     @Inject
-    public StartWithUserCommand(GameServer gameServer) {
+    public StartWithUserCommand(IGameServer gameServer) {
         this.gameServer = gameServer;
     }
 
@@ -22,6 +22,11 @@ public class StartWithUserCommand implements ICommand {
 
         if (gameServer.sessionServer().hasSessionWithPlayer(user)){
             return new CommandResult("You already have session", null, true);
+        }
+        // Проверка что пользователь ожидает в очереди
+        if(!gameServer.playerQueue().hasUser(user)){
+            gameServer.playerQueue().enqueue(gameServer.userDataBase().getUserElseNull(user.getChatID()));
+//            return new CommandResult("You waiting for other user", null, true);
         }
         try{
             var users = gameServer.playerQueue().dequeuePair();

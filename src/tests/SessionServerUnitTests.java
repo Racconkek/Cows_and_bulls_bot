@@ -1,11 +1,6 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import core.handler.BotAnswerHandler;
 import core.player.IPlayer;
-import core.player.RiddlerBot;
 import core.player.User;
 import core.primitives.UserGameRole;
 import core.session.Session;
@@ -13,6 +8,9 @@ import core.session.SessionServer;
 import exceptions.SessionServerException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SessionServerUnitTests {
 
