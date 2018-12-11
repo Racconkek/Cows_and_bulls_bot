@@ -28,7 +28,7 @@ public class BasicModule extends AbstractModule {
     public void configure(){
         bind(IHandler.class).annotatedWith(Names.named("MessageHandler")).to(MessageHandler.class);
         bind(IHandler.class).annotatedWith(Names.named("RiddlerBot")).to(RiddleBotAnswerHandler.class);
-//        bind(IHandler.class).annotatedWith(Names.named("GuesserBot")).to(GuesserBotAnswerHandler.class);
+        bind(IHandler.class).annotatedWith(Names.named("GuesserBot")).to(GuesserBotAnswerHandler.class);
         bind(IGameServer.class).to(GameServer.class).asEagerSingleton();
         bind(IUserQueue.class).to(UserQueue.class).asEagerSingleton();
         bind(ISessionServer.class).to(SessionServer.class).asEagerSingleton();
@@ -39,9 +39,10 @@ public class BasicModule extends AbstractModule {
         var binder = Multibinder.newSetBinder(binder(), ICommand.class);
         binder.addBinding().to(GetNumberCommand.class);
         binder.addBinding().to(HelpCommand.class);
-        binder.addBinding().to(StartWithBotCommand.class);
+        binder.addBinding().to(StartWithRiddlerBotCommand.class);
         binder.addBinding().to(StartWithUserCommand.class);
         binder.addBinding().to(EndSessionCommand.class);
+        binder.addBinding().to(StartWithGuesserBotCommand.class);
     }
 
 

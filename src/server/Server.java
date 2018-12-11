@@ -20,7 +20,6 @@ import javax.inject.Named;
 
 public class Server extends TelegramLongPollingBot {
     private IGameServer gameServer;
-//    private ICommandSelector commandSelector;
     private IHandler messageHandler;
 
 
@@ -30,7 +29,6 @@ public class Server extends TelegramLongPollingBot {
                   @Named("MessageHandler") IHandler messageHandler1){
         super(botOptions);
         this.gameServer = gameServer;
-//        this.commandSelector = commandSelector;
         this.messageHandler = messageHandler1;
     }
 

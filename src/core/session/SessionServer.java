@@ -3,6 +3,8 @@ package core.session;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import core.BasicModule;
+import core.player.GuesserBot;
+import tools.handler.GuesserBotAnswerHandler;
 import tools.handler.RiddleBotAnswerHandler;
 import core.player.IPlayer;
 import core.player.RiddlerBot;
@@ -51,7 +53,23 @@ public class SessionServer implements ISessionServer {
 
 
   @Override
-  public Session createAISessionForPlayer(IPlayer user) throws SessionServerException {
+  public Session createSessionWithGuesserBot(IPlayer user) throws SessionServerException {
+    if (hasSessionWithPlayer(user)) {
+      throwAlreadyHaveSession(user);
+    }
+    user.setRole(UserGameRole.RIDDLER);
+    var id = createIdForSession();
+    var injector = Guice.createInjector(new BasicModule());
+    var bot = new GuesserBot(user.getChatID(), injector.getInstance(GuesserBotAnswerHandler.class));
+    var session = new Session(user, bot, id);
+
+    idToSession.put(id, session);
+    userToCurrentSessionId.put(user, session.getId());
+    return session;
+  }
+
+  @Override
+  public Session createSessionWithRiddlerBot(IPlayer user) throws SessionServerException{
     if (hasSessionWithPlayer(user)) {
       throwAlreadyHaveSession(user);
     }

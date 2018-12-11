@@ -1,10 +1,19 @@
 package core.primitives;
 
+import com.google.inject.Inject;
+
 public class GameState {
 
   private final CowsAndBulls cowsAndBulls;
   private final Integer possibleNumber;
   private final GameStatus status;
+
+  @Inject
+  public GameState(){
+    this.cowsAndBulls = new CowsAndBulls();
+    this.possibleNumber = 1234;
+    this.status = GameStatus.IN_PROCESS;
+  }
 
   public GameState(CowsAndBulls cowsAndBulls, Integer possibleNumber, GameStatus status) {
     this.cowsAndBulls = cowsAndBulls;

@@ -10,7 +10,9 @@ public interface ISessionServer {
 
   Session createSession(IPlayer firstUser, IPlayer secondUser) throws SessionServerException;
 
-  Session createAISessionForPlayer(IPlayer user) throws SessionServerException;
+  Session createSessionWithRiddlerBot(IPlayer user) throws SessionServerException;
+
+  Session createSessionWithGuesserBot(IPlayer user) throws SessionServerException;
 
   Set<Session> getSessions();
 

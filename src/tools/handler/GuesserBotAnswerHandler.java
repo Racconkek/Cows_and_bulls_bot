@@ -3,6 +3,7 @@ package tools.handler;
 import static tools.Helper.fromIntegerToList;
 import static tools.PossibleNumbersGenerator.generatePossibleNumbers;
 
+import com.google.inject.Inject;
 import core.player.IPlayer;
 import core.primitives.CowsAndBulls;
 import core.primitives.GameState;
@@ -20,6 +21,7 @@ public class GuesserBotAnswerHandler implements IHandler {
   private HashSet<Integer> possibleDigits = new HashSet<>();
   private GameState state;
 
+  @Inject
   public GuesserBotAnswerHandler(GameState state) {
     this.state = state;
     var allDigits = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -44,7 +46,7 @@ public class GuesserBotAnswerHandler implements IHandler {
 
   private Integer getNextPossibleNumber() {
     var next = possibleNumbers.stream().findFirst().get();
-    state =state.setPossibleNumber(next);
+    state = state.setPossibleNumber(next);
     return next;
   }
 

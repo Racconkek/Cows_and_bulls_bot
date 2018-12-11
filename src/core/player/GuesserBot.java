@@ -1,5 +1,6 @@
 package core.player;
 
+import com.google.inject.Inject;
 import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
+import tools.handler.IHandler;
+
+import javax.inject.Named;
 
 public class GuesserBot implements IPlayer {
 
@@ -16,15 +20,18 @@ public class GuesserBot implements IPlayer {
   private String chatID;
   private Integer tries;
   private final UserGameRole role = UserGameRole.GUESSER;
+  private IHandler handler;
 
 
-  public GuesserBot(String chatID) {
+  @Inject
+  public GuesserBot(String chatID, @Named("GuesserBot")IHandler handler) {
     this.chatID = chatID;
     tries = 0;
+    this.handler = handler;
   }
 
   public HandlerAnswer getAnswer(String message, IPlayer user){
-    return null;
+    return handler.handleInput(message, user);
   }
 
   @Override

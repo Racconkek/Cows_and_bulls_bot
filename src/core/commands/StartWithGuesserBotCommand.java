@@ -4,15 +4,14 @@ import com.google.inject.Inject;
 import core.IGameServer;
 import core.player.IPlayer;
 import core.primitives.CommandResult;
-import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
 
-public class StartWithBotCommand implements ICommand {
+public class StartWithGuesserBotCommand implements ICommand {
 
     private final IGameServer gameServer;
 
     @Inject
-    public StartWithBotCommand(IGameServer gameServer) {
+    public StartWithGuesserBotCommand(IGameServer gameServer) {
         this.gameServer = gameServer;
     }
 
@@ -26,8 +25,9 @@ public class StartWithBotCommand implements ICommand {
             return new CommandResult("You waiting for other user", null, true);
         }
         try{
-            gameServer.sessionServer().createAISessionForPlayer(user);
-            return new CommandResult("You started session with bot. Please make your guess",
+            gameServer.sessionServer().createSessionWithGuesserBot(user);
+            //var firstGuess = gameServer.sessionServer().getSessionWithPlayer(user).getOther(user).getAnswer();
+            return new CommandResult("You started session with guesser bot.\n First guess: 1234",
                     null, false);
         }
         catch (SessionServerException e){
@@ -37,6 +37,6 @@ public class StartWithBotCommand implements ICommand {
 
     @Override
     public String getName() {
-        return "/startb";
+        return "/startgb";
     }
 }
