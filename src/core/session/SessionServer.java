@@ -3,7 +3,7 @@ package core.session;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import core.BasicModule;
-import tools.handler.BotAnswerHandler;
+import tools.handler.RiddleBotAnswerHandler;
 import core.player.IPlayer;
 import core.player.RiddlerBot;
 import core.primitives.UserGameRole;
@@ -59,7 +59,7 @@ public class SessionServer implements ISessionServer {
     user.setRole(UserGameRole.GUESSER);
     var id = createIdForSession();
     var injector = Guice.createInjector(new BasicModule());
-    var bot = new RiddlerBot(user.getChatID(), injector.getInstance(BotAnswerHandler.class));
+    var bot = new RiddlerBot(user.getChatID(), injector.getInstance(RiddleBotAnswerHandler.class));
     var session = new Session(user, bot, id);
 
     idToSession.put(id, session);

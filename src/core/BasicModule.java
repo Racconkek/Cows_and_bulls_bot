@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 //import org.glassfish.hk2.utilities.reflection.tools.Constants;
 import com.google.inject.multibindings.Multibinder;
 import core.commands.*;
-import tools.handler.BotAnswerHandler;
+import tools.handler.RiddleBotAnswerHandler;
 import core.queue.IUserQueue;
 import core.queue.UserQueue;
 import core.session.ISessionServer;
@@ -23,7 +23,7 @@ public class BasicModule extends AbstractModule {
 
     @Override
     public void configure(){
-        bind(IHandler.class).to(BotAnswerHandler.class);
+        bind(IHandler.class).to(RiddleBotAnswerHandler.class);
         bind(IGameServer.class).to(GameServer.class).asEagerSingleton();
         bind(IUserQueue.class).to(UserQueue.class).asEagerSingleton();
         bind(ISessionServer.class).to(SessionServer.class).asEagerSingleton();

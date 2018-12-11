@@ -9,11 +9,11 @@ import core.primitives.HandlerAnswer;
 import exceptions.WrongInputException;
 import tools.Constants;
 
-public class BotAnswerHandler implements IHandler{
+public class RiddleBotAnswerHandler implements IHandler{
     private final GameRules rules;
 
     @Inject
-    public BotAnswerHandler(GameRules rules) {
+    public RiddleBotAnswerHandler(GameRules rules) {
         this.rules = rules;
     }
 

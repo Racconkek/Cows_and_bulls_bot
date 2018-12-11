@@ -2,9 +2,9 @@ package core.primitives;
 
 public class GameState {
 
-  private CowsAndBulls cowsAndBulls;
-  private Integer possibleNumber;
-  private GameStatus status;
+  private final CowsAndBulls cowsAndBulls;
+  private final Integer possibleNumber;
+  private final GameStatus status;
 
   public GameState(CowsAndBulls cowsAndBulls, Integer possibleNumber, GameStatus status) {
     this.cowsAndBulls = cowsAndBulls;
