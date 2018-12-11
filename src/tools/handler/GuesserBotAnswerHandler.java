@@ -70,6 +70,13 @@ public class GuesserBotAnswerHandler implements IHandler {
       return;
     }
 
+    if(state.cowsAndBulls().getBulls() + state.cowsAndBulls().getCows() == Constants.NUMBER_OF_DIGITS){
+      removeUnpossibleDigitsByAllRightDigits(
+          new HashSet<Integer>(fromIntegerToList(state.possibleNumber())));
+      possibleNumbers = generatePossibleNumbers(possibleDigits);
+      return;
+    }
+
     possibleNumbers.remove(state.possibleNumber());
   }
 
