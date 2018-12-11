@@ -104,5 +104,17 @@ public class UserDataBaseUnitTest {
         assertEquals(expected.size(), actual.size());
     }
 
+    @Test
+    void hasUser_shouldReturnTrueValue(){
+        var base = new UserDataBase();
+        base.register("TestName", "111", UserGameRole.WAITER);
+        assertTrue(base.hasUser("111"));
+    }
 
+    @Test
+    void hasUser_shouldReturnFalseValue(){
+        var base = new UserDataBase();
+        base.register("TestName", "111", UserGameRole.WAITER);
+        assertFalse(base.hasUser("222"));
+    }
 }

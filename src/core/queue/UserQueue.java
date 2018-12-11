@@ -1,6 +1,7 @@
 package core.queue;
 
 import com.google.inject.Inject;
+import core.player.IPlayer;
 import core.player.User;
 import exceptions.UserQueueException;
 
@@ -11,7 +12,7 @@ import org.glassfish.grizzly.utils.Pair;
 
 public class UserQueue implements IUserQueue {
 
-  private final Queue<User> queue;
+  private final Queue<IPlayer> queue;
 
 
   @Inject
@@ -21,7 +22,7 @@ public class UserQueue implements IUserQueue {
 
 
   @Override
-  public boolean enqueue(User user) {
+  public boolean enqueue(IPlayer user) {
     if (user == null) {
       throw new IllegalArgumentException("attempt to enqueue null user");
     }
@@ -46,12 +47,17 @@ public class UserQueue implements IUserQueue {
   }
 
   @Override
+  public boolean hasUser(IPlayer user) {
+    return queue.contains(user);
+  }
+
+  @Override
   public int size() {
     return queue.size();
   }
 
   @Override
-  public Pair<User, User> dequeuePair() throws UserQueueException {
+  public Pair<IPlayer, IPlayer> dequeuePair() throws UserQueueException {
     var pair = dequeuePairElseNull();
 
     if (pair == null) {
@@ -62,7 +68,7 @@ public class UserQueue implements IUserQueue {
   }
 
   @Override
-  public Pair<User, User> dequeuePairElseNull() {
+  public Pair<IPlayer, IPlayer> dequeuePairElseNull() {
     if (!hasPair()) {
       return null;
     }

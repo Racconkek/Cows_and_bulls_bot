@@ -4,14 +4,14 @@ import com.google.inject.Inject;
 import core.commands.ICommand;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
 
 public class CommandSelector implements ICommandSelector {
 
     private HashMap<String, ICommand> commands;
 
     @Inject
-    public CommandSelector(HashSet<ICommand> commands) {
+    public CommandSelector(Set<ICommand> commands) {
         this.commands = new HashMap<>();
         for (var c: commands){
             this.commands.put(c.getName(), c);
