@@ -1,13 +1,13 @@
 package tools.handler;
 
+import static tools.Helper.areThereRepeats;
+
 import com.google.inject.Inject;
 import core.GameRules;
 import core.player.IPlayer;
 import core.primitives.HandlerAnswer;
 import exceptions.WrongInputException;
 import tools.Constants;
-import tools.Helper;
-import java.util.HashSet;
 
 public class BotAnswerHandler implements IHandler{
     private final GameRules rules;
@@ -54,10 +54,5 @@ public class BotAnswerHandler implements IHandler{
             return new HandlerAnswer(String.format("Cows: %d, Bulls: %d.",
                     cowsAndBulls.getCows(), cowsAndBulls.getBulls()), false);
         }
-    }
-
-    private boolean areThereRepeats(int number) {
-        var digits = Helper.fromIntegerToList(number);
-        return new HashSet<>(digits).size() != Constants.NUMBER_OF_DIGITS;
     }
 }
