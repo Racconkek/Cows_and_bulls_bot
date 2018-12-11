@@ -33,6 +33,7 @@ public class MessageHandler implements IHandler{
         if (session == null){
             return new HandlerAnswer("You don't have session. Please start one.", null,false);
         }
+
         var otherPlayer = session.getOther(user);
         if (otherPlayer instanceof RiddlerBot){
             return ((RiddlerBot)otherPlayer).getAnswer(message, user);
@@ -40,6 +41,6 @@ public class MessageHandler implements IHandler{
         if (otherPlayer instanceof GuesserBot){
             return ((GuesserBot)otherPlayer).getAnswer(message, user);
         }
-        return new HandlerAnswer(message,null,false);
+        return new HandlerAnswer(null, message, false);
     }
 }

@@ -16,6 +16,8 @@ import tools.Constants;
 import tools.handler.IHandler;
 import tools.selector.ICommandSelector;
 
+import javax.inject.Named;
+
 public class Server extends TelegramLongPollingBot {
     private IGameServer gameServer;
 //    private ICommandSelector commandSelector;
@@ -25,7 +27,7 @@ public class Server extends TelegramLongPollingBot {
     @Inject
     public Server(DefaultBotOptions botOptions,
                   IGameServer gameServer,
-                  ICommandSelector commandSelector, IHandler messageHandler, IHandler messageHandler1){
+                  @Named("MessageHandler") IHandler messageHandler1){
         super(botOptions);
         this.gameServer = gameServer;
 //        this.commandSelector = commandSelector;
@@ -50,7 +52,7 @@ public class Server extends TelegramLongPollingBot {
                                 .getOther(currentUser).getChatID(),
                         resultMessage.getSecondAnswer());
         if (resultMessage.isEndSession()){
-
+            endSession(currentUser);
         }
     }
 
