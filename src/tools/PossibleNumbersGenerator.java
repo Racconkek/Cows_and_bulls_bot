@@ -9,16 +9,21 @@ import java.util.Set;
 public class PossibleNumbersGenerator {
 
   public static HashSet<Integer> generatePossibleNumbers(Set<Integer> possibleDigits){
-    var minNumber = 10*(Constants.NUMBER_OF_DIGITS-1);
-    var maxNumber = 10*(Constants.NUMBER_OF_DIGITS)-1;
+    var minNumber = (int)Math.pow(10,Constants.NUMBER_OF_DIGITS - 1);
+    var maxNumber = Math.pow(10,Constants.NUMBER_OF_DIGITS)-1;
     var possibleNumbers = new HashSet<Integer>();
 
+    outerloop:
     for (var i = minNumber; i <= maxNumber; i++){
       if(areThereRepeats(i))
         continue;
 
-      if(!possibleDigits.containsAll(fromIntegerToList(i)))
-        continue;
+      for(var k = 0; k< Constants.NUMBER_OF_DIGITS; k++){
+        if(!possibleDigits.contains(fromIntegerToList(i).get(k))) {
+        continue outerloop;
+        }
+      }
+
 
       possibleNumbers.add(i);
     }

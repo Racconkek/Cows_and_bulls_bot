@@ -45,7 +45,7 @@ public class GuesserBotAnswerHandler implements IHandler {
 
 
   private Integer getNextPossibleNumber() {
-    var next = possibleNumbers.stream().findFirst().get();
+    var next = possibleNumbers.iterator().next();
     state = state.setPossibleNumber(next);
     return next;
   }
