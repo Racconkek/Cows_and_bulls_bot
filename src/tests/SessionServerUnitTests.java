@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SessionServerUnitTests {
 
@@ -87,6 +89,55 @@ public class SessionServerUnitTests {
     var actual = server.hasSessionWithPlayer(third);
 
     assertEquals(expected, actual);
+  }
+
+  @Test
+  void endSessionById_shouldRightEndSession() throws SessionServerException {
+    server.createSession(first, second);
+    var idSession = server.getSessionWithPlayer(first).getId();
+    server.endSession(idSession);
+
+    assertFalse(server.hasSession(idSession));
+  }
+
+  @Test
+  void endSessionById_endingUnexistingSession_shouldThrowException() throws SessionServerException {
+    var idSession = "i unexisting session";
+
+    assertThrows(SessionServerException.class, () -> server.endSession(idSession));
+  }
+
+  @Test
+  void endSessionBySession_shouldRightEndSession() throws SessionServerException {
+    server.createSession(first, second);
+    var session = server.getSessionWithPlayer(first);
+    server.endSession(session);
+
+    assertFalse(server.hasSession(session.getId()));
+  }
+
+  @Test
+  void endSessionBySession_endingUnexistingSession_shouldRightEndSession() throws SessionServerException {
+    var session = new Session(first, second, "i unexisting session");
+
+    assertThrows(SessionServerException.class, () -> server.endSession(session));
+  }
+
+  @Test
+  void hasSession_shouldReturnTrue() throws SessionServerException {
+    var session = server.createSession(first, second);
+
+
+    assertTrue(server.hasSession(session.getId()));
+  }
+
+
+  @Test
+  void hasSession_shouldReturnFalse() throws SessionServerException {
+    server.createSession(first, second);
+    var idSession = "i unexisting session";
+
+    assertFalse(server.hasSession(idSession));
   }
 
 

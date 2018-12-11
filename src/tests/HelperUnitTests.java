@@ -1,5 +1,9 @@
 package tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static tools.Helper.areThereRepeats;
 import static tools.Helper.fromIntegerToList;
 
 import java.util.ArrayList;
@@ -28,5 +32,18 @@ public class HelperUnitTests {
     var actual = fromIntegerToList(number);
 
     assertEquals(expected, actual);
+  }
+
+  @Test
+  void areThereRepeats_checkingRigthNumber_shouldReturnFalse(){
+    assertFalse(areThereRepeats(1234));
+    assertFalse(areThereRepeats(9348));
+  }
+
+  @Test
+  void areThereRepeats_checkingNumberWithRepeats_shouldReturnTrue(){
+    assertTrue(areThereRepeats(1214));
+    assertTrue(areThereRepeats(4444));
+    assertTrue(areThereRepeats(0160));
   }
 }

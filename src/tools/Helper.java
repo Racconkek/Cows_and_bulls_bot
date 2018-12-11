@@ -11,7 +11,7 @@ public class Helper {
     }
 
     public static boolean areThereRepeats(int number) {
-        var digits = Helper.fromIntegerToList(number);
+        var digits = fromIntegerToList(number);
         return new HashSet<>(digits).size() != Constants.NUMBER_OF_DIGITS;
     }
 }
