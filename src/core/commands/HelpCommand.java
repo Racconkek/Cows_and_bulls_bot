@@ -2,14 +2,13 @@ package core.commands;
 
 import core.player.IPlayer;
 import core.primitives.CommandResult;
+import tools.Constants;
 
 public class HelpCommand implements ICommand {
 
-    private final String helpText = "help text";
-
     @Override
     public CommandResult execute(IPlayer user) {
-        return new CommandResult(helpText, null, true);
+        return new CommandResult(Constants.HELP_TEXT, null, true);
     }
 
     @Override
