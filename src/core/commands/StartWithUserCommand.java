@@ -19,7 +19,6 @@ public class StartWithUserCommand implements ICommand {
 
     @Override
     public CommandResult execute(IPlayer user) {
-
         if (gameServer.sessionServer().hasSessionWithPlayer(user)){
             return new CommandResult("You already have session", null, true);
         }

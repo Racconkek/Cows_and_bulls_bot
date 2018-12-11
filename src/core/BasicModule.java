@@ -36,6 +36,7 @@ public class BasicModule extends AbstractModule {
         binder.addBinding().to(HelpCommand.class);
         binder.addBinding().to(StartWithBotCommand.class);
         binder.addBinding().to(StartWithUserCommand.class);
+        binder.addBinding().to(EndSessionCommand.class);
     }
 
 

@@ -1,5 +1,6 @@
 package core.player;
 
+import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,10 @@ public class GuesserBot implements IPlayer {
   public GuesserBot(String chatID) {
     this.chatID = chatID;
     tries = 0;
+  }
+
+  public HandlerAnswer getAnswer(String message, IPlayer user){
+    return null;
   }
 
   @Override

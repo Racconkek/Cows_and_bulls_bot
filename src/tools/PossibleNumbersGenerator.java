@@ -9,11 +9,11 @@ import java.util.Set;
 public class PossibleNumbersGenerator {
 
   public static HashSet<Integer> generatePossibleNumbers(Set<Integer> possibleDigits){
-    var minNember = 10*(Constants.NUMBER_OF_DIGITS-1);
+    var minNumber = 10*(Constants.NUMBER_OF_DIGITS-1);
     var maxNumber = 10*(Constants.NUMBER_OF_DIGITS)-1;
     var possibleNumbers = new HashSet<Integer>();
 
-    for (var i = minNember; i <= maxNumber; i++){
+    for (var i = minNumber; i <= maxNumber; i++){
       if(areThereRepeats(i))
         continue;
 

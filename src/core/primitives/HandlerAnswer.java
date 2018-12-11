@@ -1,16 +1,22 @@
 package core.primitives;
 
 public class HandlerAnswer {
-    private String answer;
+    private String firstAnswer;
+    private String secondAnswer;
     private boolean endSession;
 
-    public HandlerAnswer(String answer, boolean endSession){
-        this.answer = answer;
+    public HandlerAnswer(String firstAnswer, String secondAnswer, boolean endSession){
+        this.firstAnswer = firstAnswer;
+        this.secondAnswer = secondAnswer;
         this.endSession = endSession;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getFirstAnswer() {
+        return firstAnswer;
+    }
+
+    public String getSecondAnswer() {
+        return secondAnswer;
     }
 
     public boolean isEndSession() {
