@@ -31,16 +31,31 @@ public class GuesserBotAnswerHandler implements IHandler {
 
   @Override
   public HandlerAnswer handleInput(String str, IPlayer user) {
-    var cowsAndBulls = parseCowsAndBulls(str);
+    CowsAndBulls cowsAndBulls;
+    try {
+      cowsAndBulls = parseCowsAndBulls(str);
+    }
+    catch (Exception e){
+      return new HandlerAnswer(e.getMessage(), null, false);
+    }
     state = state.setCowsAndBulls(cowsAndBulls);
     handleGameState();
     var endSession = state.getStatus() == GameStatus.END_GAME;
     return new HandlerAnswer(getNextPossibleNumber().toString(), null, endSession);
   }
 
-  private CowsAndBulls parseCowsAndBulls(String userAnswer) {
+  private CowsAndBulls parseCowsAndBulls(String userAnswer) throws Exception{
     var cowsAndBulls = userAnswer.split(" ");
-    return new CowsAndBulls(Integer.parseInt(cowsAndBulls[0]), Integer.parseInt(cowsAndBulls[1]));
+    Integer intCows;
+    Integer intBulls;
+    try {
+      intCows = Integer.parseInt(cowsAndBulls[0]);
+      intBulls = Integer.parseInt(cowsAndBulls[1]);
+    }
+    catch (Exception e){
+      throw new Exception("Incorrect input");
+    }
+    return new CowsAndBulls(intCows, intBulls);
   }
 
 

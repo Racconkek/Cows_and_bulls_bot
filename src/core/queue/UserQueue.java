@@ -2,62 +2,81 @@ package core.queue;
 
 import com.google.inject.Inject;
 import core.player.IPlayer;
-import core.player.User;
 import exceptions.UserQueueException;
+import org.glassfish.grizzly.utils.Pair;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.glassfish.grizzly.utils.Pair;
-
 public class UserQueue implements IUserQueue {
 
-  private final Queue<IPlayer> queue;
+  private IPlayer firstUser;
+  private IPlayer secondUser;
+//  private final Queue<IPlayer> queue;
 
 
   @Inject
   public UserQueue() {
-    queue = new LinkedList<>();
+    firstUser = null;
+    secondUser = null;
+//    queue = new LinkedList<>();
   }
 
 
   @Override
-  public boolean enqueue(IPlayer user) {
+  public synchronized boolean enqueue(IPlayer user) {
     if (user == null) {
       throw new IllegalArgumentException("attempt to enqueue null user");
     }
-
-    if (!queue.contains(user))
-    {
-      queue.add(user);
+    if (firstUser == null) {
+      firstUser = user;
       return true;
     }
-
+    if(secondUser == null) {
+      secondUser = user;
+      return true;
+    }
     return false;
+//
+//    if (!queue.contains(user)) {
+//      queue.add(user);
+//      return true;
+//    }
+//
+//    return false;
   }
 
   @Override
-  public boolean hasPair() {
-    return queue.size() >= 2;
+  public synchronized boolean hasPair() {
+    return firstUser != null && secondUser != null;
+//    return queue.size() >= 2;
   }
 
   @Override
-  public boolean isEmpty() {
-    return queue.isEmpty();
+  public synchronized boolean isEmpty() {
+    return firstUser == null && secondUser == null;
+//    return queue.isEmpty();
   }
 
   @Override
-  public boolean hasUser(IPlayer user) {
-    return queue.contains(user);
+  public synchronized boolean hasUser(IPlayer user) {
+    return firstUser.equals(user) || secondUser.equals(user);
+    //    return queue.contains(user);
   }
 
   @Override
-  public int size() {
-    return queue.size();
+  public synchronized int size() {
+    var size = 0;
+    if(firstUser != null)
+      size++;
+    if (secondUser != null)
+      size++;
+    return size;
+//    return queue.size();
   }
 
   @Override
-  public Pair<IPlayer, IPlayer> dequeuePair() throws UserQueueException {
+  public synchronized Pair<IPlayer, IPlayer> dequeuePair() throws UserQueueException {
     var pair = dequeuePairElseNull();
 
     if (pair == null) {
@@ -68,14 +87,18 @@ public class UserQueue implements IUserQueue {
   }
 
   @Override
-  public Pair<IPlayer, IPlayer> dequeuePairElseNull() {
+  public synchronized Pair<IPlayer, IPlayer> dequeuePairElseNull() {
     if (!hasPair()) {
       return null;
     }
+    var pair = new Pair<>(firstUser, secondUser);
+    firstUser = null;
+    secondUser = null;
+    return pair;
 
-    var first = queue.remove();
-    var second = queue.remove();
-
-    return new Pair<>(first, second);
+//    var first = queue.remove();
+//    var second = queue.remove();
+//
+//    return new Pair<>(first, second);
   }
 }
