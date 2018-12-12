@@ -62,6 +62,7 @@ public class GuesserBotAnswerHandler implements IHandler {
       removeUnpossibleDigitsByAllRightDigits(
           new HashSet<Integer>(fromIntegerToList(state.possibleNumber())));
       possibleNumbers = generatePossibleNumbers(possibleDigits);
+      possibleNumbers.remove(state.possibleNumber());
       return;
     }
 
@@ -74,6 +75,7 @@ public class GuesserBotAnswerHandler implements IHandler {
       removeUnpossibleDigitsByAllRightDigits(
           new HashSet<Integer>(fromIntegerToList(state.possibleNumber())));
       possibleNumbers = generatePossibleNumbers(possibleDigits);
+      possibleNumbers.remove(state.possibleNumber());
       return;
     }
 
