@@ -4,45 +4,42 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import core.BasicModule;
 import core.player.GuesserBot;
-import tools.handler.GuesserBotAnswerHandler;
-import tools.handler.RiddleBotAnswerHandler;
 import core.player.IPlayer;
 import core.player.RiddlerBot;
 import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
+import tools.handler.GuesserBotAnswerHandler;
+import tools.handler.RiddleBotAnswerHandler;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class SessionServer implements ISessionServer {
 
-  private final Map<String, Session> idToSession;
-  private final Map<IPlayer, String> userToCurrentSessionId;
+  private final ConcurrentMap<String, Session> idToSession;
+  private final ConcurrentMap<IPlayer, String> userToCurrentSessionId;
 
   @Inject
   public SessionServer() {
-    idToSession = new HashMap<>();
-    userToCurrentSessionId = new HashMap<>();
+    idToSession = new ConcurrentHashMap<>();
+    userToCurrentSessionId = new ConcurrentHashMap<>();
   }
 
   @Override
   public Session createSession(IPlayer firstUser, IPlayer secondUser) throws SessionServerException {
     if (hasSessionWithPlayer(firstUser)) {
-      throwAlreadyHaveSession(firstUser);
+      throw new SessionServerException(String.format("User %s already have session", firstUser.getName()));
     }
-
     if (hasSessionWithPlayer(secondUser)) {
-      throwAlreadyHaveSession(secondUser);
+      throw new SessionServerException(String.format("User %s already have session", secondUser.getName()));
     }
-
     var id = createIdForSession();
     var session = new Session(firstUser, secondUser, id);
-
-    idToSession.put(id, session);
-    userToCurrentSessionId.put(firstUser, session.getId());
-    userToCurrentSessionId.put(secondUser, session.getId());
+    idToSession.putIfAbsent(id, session);
+    userToCurrentSessionId.putIfAbsent(firstUser, session.getId());
+    userToCurrentSessionId.putIfAbsent(secondUser, session.getId());
 
     return session;
   }
@@ -55,7 +52,7 @@ public class SessionServer implements ISessionServer {
   @Override
   public Session createSessionWithGuesserBot(IPlayer user) throws SessionServerException {
     if (hasSessionWithPlayer(user)) {
-      throwAlreadyHaveSession(user);
+      throw new SessionServerException(String.format("User %s already have session", user.getName()));
     }
     user.setRole(UserGameRole.RIDDLER);
     var id = createIdForSession();
@@ -63,15 +60,15 @@ public class SessionServer implements ISessionServer {
     var bot = new GuesserBot(user.getChatID(), injector.getInstance(GuesserBotAnswerHandler.class));
     var session = new Session(user, bot, id);
 
-    idToSession.put(id, session);
-    userToCurrentSessionId.put(user, session.getId());
+    idToSession.putIfAbsent(id, session);
+    userToCurrentSessionId.putIfAbsent(user, session.getId());
     return session;
   }
 
   @Override
   public Session createSessionWithRiddlerBot(IPlayer user) throws SessionServerException{
     if (hasSessionWithPlayer(user)) {
-      throwAlreadyHaveSession(user);
+      throw new SessionServerException(String.format("User %s already have session", user.getName()));
     }
 
     user.setRole(UserGameRole.GUESSER);
@@ -80,8 +77,8 @@ public class SessionServer implements ISessionServer {
     var bot = new RiddlerBot(user.getChatID(), injector.getInstance(RiddleBotAnswerHandler.class));
     var session = new Session(user, bot, id);
 
-    idToSession.put(id, session);
-    userToCurrentSessionId.put(user, session.getId());
+    idToSession.putIfAbsent(id, session);
+    userToCurrentSessionId.putIfAbsent(user, session.getId());
     return session;
   }
 
@@ -158,10 +155,6 @@ public class SessionServer implements ISessionServer {
   @Override
   public boolean hasSession(String sessionId) {
     return userToCurrentSessionId.containsValue(sessionId);
-  }
-
-  private void throwAlreadyHaveSession(IPlayer user) throws SessionServerException {
-    throw new SessionServerException(String.format("User %s already have session", user.getName()));
   }
 
   private void throwNotThatSessionException(String id) throws SessionServerException {

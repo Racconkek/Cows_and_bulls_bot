@@ -4,33 +4,31 @@ import com.google.inject.Inject;
 import core.player.User;
 import core.primitives.UserGameRole;
 import exceptions.UserDataBaseException;
-import java.util.HashMap;
+
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class UserDataBase implements IUserDataBase {
 
-  private final Map<String, User> idToUser;
+  private final ConcurrentMap<String, User> idToUser;
 
   @Inject
   public UserDataBase() {
-    idToUser = new HashMap<>();
+    idToUser = new ConcurrentHashMap<>();
   }
 
   @Override
-  public boolean register(String name, String chatID, UserGameRole role) {
-    var user = new User(name, chatID, role);
-    idToUser.put(chatID, user);
-    return true;
+  public User getUserOrRegister(String name, String chatID, UserGameRole role) {
+    return idToUser.computeIfAbsent(chatID, (id) -> new User(name, id, role));
   }
 
   @Override
   public boolean delete(String chatID) throws UserDataBaseException {
     if (!hasUser(chatID))
       throw new UserDataBaseException(String.format("No that user with chatID: %s", chatID));
-    var id = getUser(chatID).getChatID();
-    idToUser.remove(id);
+    idToUser.remove(chatID, getUser(chatID));
     return true;
   }
 

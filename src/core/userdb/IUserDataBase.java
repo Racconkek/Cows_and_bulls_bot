@@ -6,7 +6,7 @@ import exceptions.UserDataBaseException;
 import java.util.Set;
 
 public interface IUserDataBase {
-  boolean register(String name, String chatID, UserGameRole role);
+  User getUserOrRegister(String name, String chatID, UserGameRole role);
   boolean delete(String chatID) throws UserDataBaseException;
   User getUser(String chatID) throws UserDataBaseException;
   User getUserElseNull(String chatID);

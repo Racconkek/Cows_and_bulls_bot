@@ -5,21 +5,15 @@ import core.player.IPlayer;
 import exceptions.UserQueueException;
 import org.glassfish.grizzly.utils.Pair;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class UserQueue implements IUserQueue {
 
   private IPlayer firstUser;
   private IPlayer secondUser;
-//  private final Queue<IPlayer> queue;
-
 
   @Inject
   public UserQueue() {
     firstUser = null;
     secondUser = null;
-//    queue = new LinkedList<>();
   }
 
 
@@ -37,31 +31,26 @@ public class UserQueue implements IUserQueue {
       return true;
     }
     return false;
-//
-//    if (!queue.contains(user)) {
-//      queue.add(user);
-//      return true;
-//    }
-//
-//    return false;
   }
 
   @Override
   public synchronized boolean hasPair() {
     return firstUser != null && secondUser != null;
-//    return queue.size() >= 2;
   }
 
   @Override
   public synchronized boolean isEmpty() {
     return firstUser == null && secondUser == null;
-//    return queue.isEmpty();
   }
 
   @Override
   public synchronized boolean hasUser(IPlayer user) {
-    return firstUser.equals(user) || secondUser.equals(user);
-    //    return queue.contains(user);
+    var result = false;
+    if (firstUser != null)
+      result = firstUser.equals(user);
+    if (secondUser != null)
+      result = secondUser.equals(user);
+    return result;
   }
 
   @Override
@@ -72,7 +61,6 @@ public class UserQueue implements IUserQueue {
     if (secondUser != null)
       size++;
     return size;
-//    return queue.size();
   }
 
   @Override
@@ -95,10 +83,5 @@ public class UserQueue implements IUserQueue {
     firstUser = null;
     secondUser = null;
     return pair;
-
-//    var first = queue.remove();
-//    var second = queue.remove();
-//
-//    return new Pair<>(first, second);
   }
 }

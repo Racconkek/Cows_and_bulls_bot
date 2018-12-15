@@ -37,11 +37,7 @@ public class Server extends TelegramLongPollingBot {
         var message = update.getMessage().getText();
         var name = update.getMessage().getChat().getUserName();
         var chatID = update.getMessage().getChatId().toString();
-        var currentUser = gameServer.userDataBase().getUserElseNull(chatID);
-        if(currentUser == null){
-            gameServer.userDataBase().register(name, chatID, UserGameRole.WAITER);
-            currentUser = gameServer.userDataBase().getUserElseNull(chatID);
-        }
+        var currentUser = gameServer.userDataBase().getUserOrRegister(name, chatID, UserGameRole.WAITER);
         var resultMessage = messageHandler.handleInput(message, currentUser);
         if (resultMessage.getFirstAnswer() != null)
             sendMsg(chatID, resultMessage.getFirstAnswer());
