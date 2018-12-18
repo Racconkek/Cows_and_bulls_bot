@@ -9,7 +9,7 @@ import core.player.RiddlerBot;
 import core.primitives.UserGameRole;
 import exceptions.SessionServerException;
 import tools.handler.GuesserBotAnswerHandler;
-import tools.handler.RiddleBotAnswerHandler;
+import tools.handler.RiddlerBotAnswerHandler;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -74,7 +74,7 @@ public class SessionServer implements ISessionServer {
     user.setRole(UserGameRole.GUESSER);
     var id = createIdForSession();
     var injector = Guice.createInjector(new BasicModule());
-    var bot = new RiddlerBot(user.getChatID(), injector.getInstance(RiddleBotAnswerHandler.class));
+    var bot = new RiddlerBot(user.getChatID(), injector.getInstance(RiddlerBotAnswerHandler.class));
     var session = new Session(user, bot, id);
 
     idToSession.putIfAbsent(id, session);

@@ -61,6 +61,7 @@ public class CommandResultUnitTests {
     assertFalse(commandResult.equals(10));
     assertFalse(commandResult.equals("firstMsg"));
     assertFalse(commandResult.equals(new CommandResult("firstMsg", null)));
+    assertFalse((new CommandResult("firstMsg", null).equals(commandResult)));
     assertFalse(commandResult.equals(new CommandResult(null, "secondMsg")));
     assertFalse(commandResult.equals(null));
   }

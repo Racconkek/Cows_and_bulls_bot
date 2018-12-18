@@ -2,7 +2,6 @@ package core.player;
 
 import com.google.inject.Inject;
 import tools.handler.IHandler;
-import tools.handler.RiddleBotAnswerHandler;
 import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import tools.HiddenNumberGenerator;
@@ -17,7 +16,7 @@ public class RiddlerBot implements IPlayer {
     private Integer tries;
     private List<Integer> hiddenNumber;
     private String chatID;
-    private UserGameRole role = UserGameRole.RIDDLER;
+    private final UserGameRole role = UserGameRole.RIDDLER;
     private IHandler handler;
 
     @Inject
@@ -60,7 +59,6 @@ public class RiddlerBot implements IPlayer {
 
     @Override
     public void setRole(UserGameRole role) {
-        this.role = role;
     }
 
     @Override
