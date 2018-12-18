@@ -41,11 +41,11 @@ public class StartWithGuesserBotCommandUnitTest {
     @Test
     void executeIfHasSession_shouldReturnRightValue(){
         var command = new StartWithGuesserBotCommand(gameServer);
-        var expected = new CommandResult("You already have session", null);
-        CommandResult actual = null;
+        var expected = new CommandResult("User TestUser1 already have session", null);
 
+        CommandResult actual = null;
         try {
-            gameServer.sessionServer().createSessionWithRiddlerBot(first);
+            gameServer.sessionServer().createSessionWithGuesserBot(first);
             actual = command.execute(first);
         }
         catch (SessionServerException e){

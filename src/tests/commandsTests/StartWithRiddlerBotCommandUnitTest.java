@@ -42,7 +42,7 @@ public class StartWithRiddlerBotCommandUnitTest {
     @Test
     void executeIfHasSession_shouldReturnRightValue(){
         var command = new StartWithRiddlerBotCommand(gameServer);
-        var expected = new CommandResult("You already have session", null);
+        var expected = new CommandResult("User TestUser1 already have session", null);
         CommandResult actual = null;
 
         try {

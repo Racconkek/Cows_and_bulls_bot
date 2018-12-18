@@ -19,18 +19,15 @@ public class StartWithUserCommand implements ICommand {
 
     @Override
     public CommandResult execute(IPlayer user) {
-        if (gameServer.sessionServer().hasSessionWithPlayer(user)){
-            return new CommandResult("You already have session", null);
-        }
         // Проверка что пользователь ожидает в очереди
-        if(!gameServer.playerQueue().hasUser(user)){
-            gameServer.playerQueue().enqueue(gameServer.userDataBase().getUserElseNull(user.getChatID()));
+        if(gameServer.playerQueue().hasUser(user)){
+            return new CommandResult("You are waiting for other user", null);
         }
         try{
-            var users = gameServer.playerQueue().dequeuePair();
-            gameServer.sessionServer().createSession(users.getFirst(), users.getSecond());
-            users.getFirst().setRole(UserGameRole.RIDDLER);
-            users.getSecond().setRole(UserGameRole.GUESSER);
+            var secondUser = gameServer.playerQueue().dequeue();
+            gameServer.sessionServer().createSession(user, secondUser);
+            user.setRole(UserGameRole.RIDDLER);
+            secondUser.setRole(UserGameRole.GUESSER);
             return new CommandResult("You are riddler", "You are guesser");
         }
         catch (UserQueueException | SessionServerException e){

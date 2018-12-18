@@ -20,11 +20,8 @@ public class EndSessionCommand implements ICommand {
 
     @Override
     public CommandResult execute(IPlayer user) {
-        var session = gameServer.sessionServer().getSessionWithPlayerElseNull(user);
-        if (session == null){
-            return new CommandResult("You don't have session", null);
-        }
         try {
+            var session = gameServer.sessionServer().getSessionWithPlayer(user);
             var otherUser = session.getOther(user);
             if (otherUser instanceof User) {
                 gameServer.userDataBase().delete(otherUser.getChatID());

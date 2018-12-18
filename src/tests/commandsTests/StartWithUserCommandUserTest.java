@@ -40,30 +40,12 @@ public class StartWithUserCommandUserTest {
     }
 
     @Test
-    void executeIfHasSession_shouldReturnRightValue(){
-        var command = new StartWithUserCommand(gameServer);
-        var expected = new CommandResult("You already have session", null);
-        CommandResult actual = null;
-
-        try {
-            gameServer.sessionServer().createSessionWithRiddlerBot(first);
-            actual = command.execute(first);
-        }
-        catch (SessionServerException e){
-            assertEquals("User TestUser1 already have session", e.getMessage());
-        }
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void executeCreateSession_shouldReturnRightValue(){
         var command = new StartWithUserCommand(gameServer);
         gameServer.playerQueue().enqueue(first);
-        gameServer.playerQueue().enqueue(second);
 
         var expected = new CommandResult("You are riddler", "You are guesser");
-        var actual = command.execute(first);
+        var actual = command.execute(second);
 
         assertEquals(expected, actual);
     }
@@ -73,9 +55,39 @@ public class StartWithUserCommandUserTest {
         var command = new StartWithUserCommand(gameServer);
         gameServer.playerQueue().enqueue(first);
 
-        var expected = new CommandResult("There is no user to play with. Please wait.", null);
+        var expected = new CommandResult("You are waiting for other user", null);
         var actual = command.execute(first);
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    void executeNoUserToPlayWith_shouldReturnRightValue(){
+        var command = new StartWithUserCommand(gameServer);
+
+        var expected = new CommandResult("No user to play with.", null);
+        var actual = command.execute(first);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void executeUserHasSession_shouldReturnRightValue(){
+        var command = new StartWithUserCommand(gameServer);
+
+        try {
+            gameServer.playerQueue().enqueue(first);
+            gameServer.sessionServer().createSessionWithRiddlerBot(first);
+
+            var expected = new CommandResult("User TestUser1 already have session", null);
+            var actual = command.execute(second);
+
+            assertEquals(expected, actual);
+        }
+        catch (SessionServerException e){
+            assertEquals("User TestUser1 already have session", e.getMessage());
+        }
+
+    }
+
 }
