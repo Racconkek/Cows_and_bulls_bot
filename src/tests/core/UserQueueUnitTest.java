@@ -3,12 +3,12 @@ package tests.core;
 import core.player.User;
 import core.primitives.UserGameRole;
 import core.queue.UserQueue;
+import exceptions.UserQueueException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserQueueUnitTest {
 
@@ -23,13 +23,27 @@ public class UserQueueUnitTest {
     }
 
     @Test
-    void enqueue_shouldAddPlayer(){
+    void enqueue_shouldThrowException() throws UserQueueException {
+       assertThrows(IllegalArgumentException.class, () -> queue.enqueue(null));
+    }
+
+    @Test
+    void enqueue_shouldReturnTrueValue(){
         first = new User("TestUser", "111", UserGameRole.WAITER);
 
-        queue.enqueue(first);
-        var actual = queue.hasUser(first);
+        var actual = queue.enqueue(first);
 
         assertTrue(actual);
+    }
+
+    @Test
+    void enqueue_shouldReturnFalseValue(){
+        first = new User("TestUser", "111", UserGameRole.WAITER);
+        queue.enqueue(first);
+
+        var actual = queue.enqueue(second);
+
+        assertFalse(actual);
     }
 
     @Test
@@ -69,5 +83,12 @@ public class UserQueueUnitTest {
         var actual = queue.size();
 
         assertEquals(1, actual);
+    }
+
+    @Test
+    void size_shouldReturnZeroValue(){
+        var actual = queue.size();
+
+        assertEquals(0, actual);
     }
 }
