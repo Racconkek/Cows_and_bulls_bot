@@ -1,4 +1,4 @@
-package tests;
+package tests.core;
 
 import core.GameRules;
 import core.player.IPlayer;

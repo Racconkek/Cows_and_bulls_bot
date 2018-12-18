@@ -1,4 +1,4 @@
-package tests;
+package tests.tools;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tools.PossibleNumbersGenerator.generatePossibleNumbers;

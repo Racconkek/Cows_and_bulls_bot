@@ -1,4 +1,4 @@
-package tests;
+package tests.tools;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;

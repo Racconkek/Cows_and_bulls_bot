@@ -1,4 +1,4 @@
-package tests;
+package tests.core;
 
 import core.player.IPlayer;
 import core.player.User;

@@ -1,4 +1,4 @@
-package tests;
+package tests.core;
 
 import core.player.User;
 import core.primitives.UserGameRole;
