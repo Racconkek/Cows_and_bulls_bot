@@ -9,8 +9,8 @@ import java.util.Set;
 public class PossibleNumbersGenerator {
 
   public static HashSet<Integer> generatePossibleNumbers(Set<Integer> possibleDigits){
-    var minNumber = (int)Math.pow(10,Constants.NUMBER_OF_DIGITS - 1);
     var maxNumber = Math.pow(10,Constants.NUMBER_OF_DIGITS)-1;
+    var minNumber = (int)Math.pow(10,Constants.NUMBER_OF_DIGITS - 1);
     var possibleNumbers = new HashSet<Integer>();
 
     outerloop:

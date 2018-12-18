@@ -7,19 +7,19 @@ import core.primitives.HandlerAnswer;
 import core.primitives.UserGameRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tools.handler.RiddleBotAnswerHandler;
+import tools.handler.RiddlerBotAnswerHandler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RiddlerBotAnswerHandlerUnitTests {
 
-    private RiddleBotAnswerHandler handler;
+    private RiddlerBotAnswerHandler handler;
     private User user;
 
     @BeforeEach
     void setUp(){
         var injector = Guice.createInjector(new BasicModule());
-        handler = injector.getInstance(RiddleBotAnswerHandler.class);
+        handler = injector.getInstance(RiddlerBotAnswerHandler.class);
         user = new User("TestUser1", "111", UserGameRole.WAITER);
     }
 
