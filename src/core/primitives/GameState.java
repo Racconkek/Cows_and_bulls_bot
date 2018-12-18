@@ -1,6 +1,7 @@
 package core.primitives;
 
 import com.google.inject.Inject;
+import core.player.User;
 
 public class GameState {
 
@@ -25,7 +26,7 @@ public class GameState {
     return cowsAndBulls;
   }
 
-  public GameState setCowsAndBulls(CowsAndBulls cowsAndBulls) {
+  public GameState createWithCowsAndBulls(CowsAndBulls cowsAndBulls) {
     return new GameState(cowsAndBulls, this.possibleNumber, this.status);
   }
 
@@ -33,7 +34,7 @@ public class GameState {
     return possibleNumber;
   }
 
-  public GameState setPossibleNumber(Integer possibleNumber) {
+  public GameState createWithPossibleNumber(Integer possibleNumber) {
     return new GameState(this.cowsAndBulls, possibleNumber, this.status);
   }
 
@@ -41,7 +42,17 @@ public class GameState {
     return status;
   }
 
-  public GameState setStatus(GameStatus status) {
+  public GameState createWithStatus(GameStatus status) {
     return new GameState(this.cowsAndBulls, this.possibleNumber, status);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof GameState) {
+      var other = (GameState) obj;
+      return this.cowsAndBulls.equals(other.cowsAndBulls) && this.status.equals(other.status) &&
+          this.possibleNumber.equals(other.possibleNumber);
+    }
+    return false;
   }
 }

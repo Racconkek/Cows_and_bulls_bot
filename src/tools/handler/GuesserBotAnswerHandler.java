@@ -13,7 +13,6 @@ import core.primitives.HandlerAnswer;
 import java.util.Arrays;
 import java.util.HashSet;
 import tools.Constants;
-import tools.handler.IHandler;
 
 public class GuesserBotAnswerHandler implements IHandler {
 
@@ -38,7 +37,7 @@ public class GuesserBotAnswerHandler implements IHandler {
     catch (Exception e){
       return new HandlerAnswer(e.getMessage(), null, false);
     }
-    state = state.setCowsAndBulls(cowsAndBulls);
+    state = state.createWithCowsAndBulls(cowsAndBulls);
     handleGameState();
     var endSession = state.getStatus() == GameStatus.END_GAME;
     return new HandlerAnswer(getNextPossibleNumber().toString(), null, endSession);
@@ -61,7 +60,7 @@ public class GuesserBotAnswerHandler implements IHandler {
 
   private Integer getNextPossibleNumber() {
     var next = possibleNumbers.iterator().next();
-    state = state.setPossibleNumber(next);
+    state = state.createWithPossibleNumber(next);
     return next;
   }
 
@@ -82,7 +81,7 @@ public class GuesserBotAnswerHandler implements IHandler {
     }
 
     if (state.cowsAndBulls().getBulls().equals(Constants.NUMBER_OF_DIGITS)) {
-      state = state.setStatus(GameStatus.END_GAME);
+      state = state.createWithStatus(GameStatus.END_GAME);
       return;
     }
 
