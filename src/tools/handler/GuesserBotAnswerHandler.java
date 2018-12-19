@@ -57,7 +57,6 @@ public class GuesserBotAnswerHandler implements IHandler {
     return new CowsAndBulls(intCows, intBulls);
   }
 
-
   private Integer getNextPossibleNumber() {
     var next = possibleNumbers.iterator().next();
     state = state.createWithPossibleNumber(next);
