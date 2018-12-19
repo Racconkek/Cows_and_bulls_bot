@@ -29,6 +29,7 @@ public class MessageHandler implements IHandler{
         if (gameServer.playerQueue().hasUser(user)){
             return new HandlerAnswer("You are waiting other user", null,false);
         }
+
         var session = gameServer.sessionServer().getSessionWithPlayerElseNull(user);
         if (session == null){
             return new HandlerAnswer("You don't have session. Please start one.", null,false);
